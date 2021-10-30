@@ -2,6 +2,7 @@
 # vi: set ft=ruby :
 
 disk = './lfs.vdi'
+lfs = '/mnt/lfs'
 
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/trusty64"
@@ -28,8 +29,13 @@ Vagrant.configure("2") do |config|
     s.path = "bin/25_mkfs.sh"
   end
 
-  config.vm.provision "Mounting lfs...", type: "shell" do |s|
+  config.vm.provision "Setting variables...", type: "shell" do |s|
+    s.path = "bin/27_set_vars.sh"
+  end
+
+  config.vm.provision "Mounting lfs file systems, enabling swap...", type: "shell" do |s|
     s.path = "bin/27_mount.sh"
+    s.env = {"LFS" => lfs}
   end
 
 end
