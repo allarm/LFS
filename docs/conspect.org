@@ -1,19 +1,11 @@
 #+TITLE: Linux From Scratch Conspect
 
-* 0 Preparing the host system
-** Vagrant file
-
-#+begin_src ruby
-Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu/trusty64"
-end
-#+end_src
-
-* 2. Host System Requirements
+* 2 Preparing the host system
+** 2.2 Host System Requirements
 
 Vagrant snapshot: Initial
 
-** List
+*** List
 
 Bash-3.2 (/bin/sh should be a symbolic or hard link to bash)
 Binutils-2.25 (Versions greater than 2.37 are not recommended as they have not been tested)
@@ -40,7 +32,7 @@ Tar-1.22
 Texinfo-4.7
 Xz-5.0.0
 
-** Check script
+*** Check script
 
 #+begin_src sh
 #!/bin/bash
@@ -100,5 +92,99 @@ if [ -x dummy ]
 rm -f dummy.c dummy
 #+end_src
 
-** Update
-*** Bash
+*** Update
+**** Bash
+** 2.4 Creating a new partition
+
+Вместо отрезания партиции от существующей я решил создать отдельный hdd в vagrant, как описано тут: https://everythingshouldbevirtual.com/virtualization/vagrant-adding-a-second-hard-drive/
+
+
+#+begin_src ruby
+disk = './secondDisk.vdi'
+Vagrant.configure(2) do |config|
+  config.vm.define "iscsitarget" do |iscsitarget|
+    iscsitarget.vm.box = "ubuntu/trusty64"
+    iscsitarget.vm.hostname = "iscsitarget"
+
+    iscsitarget.vm.network :private_network, ip: "192.168.202.201"
+
+    iscsitarget.vm.provider "virtualbox" do |vb|
+      unless File.exist?(disk)
+        vb.customize ['createhd', '--filename', disk, '--variant', 'Fixed', '--size', 30 * 1024]
+      end
+      vb.memory = "1024"
+      vb.customize ['storageattach', :id,  '--storagectl', 'SATAController', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk]
+    end
+  end
+  config.vm.provision :shell, path: "provision.sh", keep_color: "true"
+end
+#+end_src
+
+fdisk -l
+
+Disk /dev/sdb: 10.7 GB, 10737418240 bytes
+255 heads, 63 sectors/track, 1305 cylinders, total 20971520 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk identifier: 0x00000000
+
+Disk /dev/sdb doesn't contain a valid partition table
+
+I create 3 partitions:
+
+    An "EFI" system partition 1M big (will eventually be /boot/efi)
+    A "Linux Filesystem" partion 200M big (will eventually be /boot)
+    A "Lunux Filesystem" partition with the rest of the disk (will eventually be /)
+
+Recommendations for partitioning (RedHat): https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/installation_guide/s2-diskpartrecommend-x86
+
+- A swap partition ~ 2GB swap
+- A /boot partition ~ 200MB ext4
+- A / partition = 20GB
+- A home partition
+- A /boot/efi partition (EFI System Partition) - only on systems with UEFI firmware
+
+
+Утилиты для нарезки партишнов:
+
+- fdisk
+- cfdisk (curses fdisk)
+- sfdisk (script version)
+- parted
+Partition Table for /dev/sdb
+
+:raw:
+         ---Starting----      ----Ending-----    Start     Number of
+ # Flags Head Sect  Cyl   ID  Head Sect  Cyl     Sector    Sectors
+-- ----- ---- ---- ----- ---- ---- ---- ----- ----------- -----------
+ 1  0x00    1    1     0 0x82  254   63   242          63     3903732
+ 2  0x00    0    1   243 0x83  254   63   266     3903795      385560
+ 3  0x00    0    1   267 0x83  254   63  2698     4289355    39070080
+ 4  0x00    0    1  2699 0x05   63   51  3916    43359435    19555125
+ 5  0x00    1    1  2699 0x83   63   51  3916          63    19555062
+:end:
+
+
+Generate sfdisk empty input:
+
+# sfdisk -d /dev/sdb
+# partition table of /dev/sdb
+unit: sectors
+
+/dev/sdb1 : start=        0, size=        0, Id= 0
+/dev/sdb2 : start=        0, size=        0, Id= 0
+/dev/sdb3 : start=        0, size=        0, Id= 0
+/dev/sdb4 : start=        0, size=        0, Id= 0
+
+
+Actual partition table:
+
+# sfdisk -d /dev/sdb
+# partition table of /dev/sdb
+unit: sectors
+
+/dev/sdb1 : start=       63, size=  3903732, Id=82
+/dev/sdb2 : start=  3903795, size=   385560, Id=83
+/dev/sdb3 : start=  4289355, size= 39070080, Id=83
+/dev/sdb4 : start= 43359435, size= 19555125, Id=83
