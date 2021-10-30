@@ -13,6 +13,7 @@ Vagrant.configure("2") do |config|
     end
 
   config.vm.provision "checkup", type: "shell" do |s|
+  config.vm.provision "Checkup...", type: "shell" do |s|
     s.path = "bin/00_check.sh"
   end
 
