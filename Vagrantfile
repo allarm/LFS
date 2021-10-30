@@ -23,4 +23,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "Partitioning...", type: "shell" do |s|
     s.path = "bin/24_partitioning.sh"
   end
+  config.vm.provision "Creating filesystems...", type: "shell" do |s|
+    s.path = "bin/25_mkfs.sh"
+  end
 end
