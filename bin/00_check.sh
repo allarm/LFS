@@ -9,14 +9,15 @@ tc_bash() {
   sudo ln -s /bin/bash /bin/sh
 }
 
-tc_binutils() {
-  sudo apt-get install binutils-2.26
+tc_all() {
+  sudo apt-get -qy update
+  sudo apt-get -y install binutils gcc g++ bison texinfo
   grep binutils .profile || echo 'PATH="/usr/lib/binutils-2.26/bin/:$PATH"' >> .profile
 }
 
 export LC_ALL=C
 
-sudo apt update
+tc_all
 
 bash --version | head -n1 | cut -d" " -f2-4
 MYSH=$(readlink -f /bin/sh)
@@ -28,7 +29,6 @@ echo $MYSH | grep -q bash || tc_bash
 unset MYSH
 
 echo -n "Binutils: "; ld --version | head -n1 | cut -d" " -f3-
-tc_binutils
 
 bison --version | head -n1
 
