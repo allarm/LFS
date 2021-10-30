@@ -13,6 +13,7 @@ tc_all() {
   sudo apt-get -qy update
   sudo apt-get -y install binutils gcc g++ bison texinfo
   grep binutils .profile || echo 'PATH="/usr/lib/binutils-2.26/bin/:$PATH"' >> .profile
+  grep LFS .profile || echo 'LFS="/mnt/lfs"' >> .profile
 }
 
 export LC_ALL=C
