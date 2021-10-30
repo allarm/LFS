@@ -94,7 +94,7 @@ rm -f dummy.c dummy
 
 *** Update
 **** Bash
-** 2.4 Creating a new partition
+** 2.4 Creating a New Partition
 
 Вместо отрезания партиции от существующей я решил создать отдельный hdd в vagrant, как описано тут: https://everythingshouldbevirtual.com/virtualization/vagrant-adding-a-second-hard-drive/
 
@@ -188,3 +188,30 @@ unit: sectors
 /dev/sdb2 : start=  3903795, size=   385560, Id=83
 /dev/sdb3 : start=  4289355, size= 39070080, Id=83
 /dev/sdb4 : start= 43359435, size= 19555125, Id=83
+
+- /sdb1 :: swap
+- /sdb2 :: /boot
+- /sdb3 :: /
+- /sdb4 :: /home
+
+** 2.5 Creating a File System on the Partition
+
+#+begin_src sh
+sudo mkswap /dev/sdb1
+sudo mkfs -v -t ext4 /dev/sdb2
+sudo mkfs -v -t ext4 /dev/sdb3
+sudo mkfs -v -t ext4 /dev/sdb4
+#+end_src
+
+** 2.7 Mounting the New Partition
+
+#+begin_src sh
+sudo mkdir -pv $LFS
+sudo mount -v -t ext4 /dev/sdb3 $LFS
+sudo mkdir -v $LFS/swap
+sudo mount -v -t swap /dev/sdb1 $LFS/swap
+sudo mkdir -v $LFS/boot
+sudo mount -v -t ext4 /dev/sdb2 $LFS/boot
+sudo mkdir -v $LFS/home
+sudo mount -v -t ext4 /dev/sdb4 $LFS/home
+#+end_src
