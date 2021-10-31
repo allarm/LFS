@@ -3,6 +3,7 @@
 
 disk = './lfs.vdi'
 lfs = '/mnt/lfs'
+packages_version = '11.0'
 
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/trusty64"
@@ -42,9 +43,11 @@ Vagrant.configure("2") do |config|
     s.path = "bin/40_dir_layout.sh"
     s.env = {"LFS" => lfs}
   end
+  # If files were uploaded from local storage, it will be skipped
   config.vm.provision "Downloading sources...", type: "shell" do |s|
     s.path = "bin/31_sources.sh"
     s.env = {"LFS" => lfs}
+    s.env = {"LFS" => lfs, "PACKAGES_VERSION" => packages_version}
   end
 
 end

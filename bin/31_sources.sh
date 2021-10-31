@@ -19,7 +19,6 @@ download_files() {
 
 WGET_FILE=$LFS/sources/wget-list
 MIRROR=https://mirror.tochlab.net
-PACKAGES_VERSION=11.0
 
 mkdir -pv "${LFS}"/sources
 
