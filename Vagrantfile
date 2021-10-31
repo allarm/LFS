@@ -38,4 +38,9 @@ Vagrant.configure("2") do |config|
     s.env = {"LFS" => lfs}
   end
 
+  config.vm.provision "Downloading sources...", type: "shell" do |s|
+    s.path = "bin/31_sources.sh"
+    s.env = {"LFS" => lfs}
+  end
+
 end
