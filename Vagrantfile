@@ -43,6 +43,12 @@ Vagrant.configure("2") do |config|
     s.path = "bin/40_dir_layout.sh"
     s.env = {"LFS" => lfs}
   end
+
+  config.vm.provision "Copying sources from local storage...", type: "file" do |s|
+    s.source = "files/lfs/sources"
+    s.destination = "/mnt/lfs/sources"
+  end
+
   # If files were uploaded from local storage, it will be skipped
   config.vm.provision "Downloading sources...", type: "shell" do |s|
     s.path = "bin/31_sources.sh"
