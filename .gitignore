@@ -1,4 +1,4 @@
 .vagrant/
-files/
+files/lfs/
 .DS_Store
 *.vdi
