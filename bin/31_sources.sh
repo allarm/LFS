@@ -20,8 +20,6 @@ download_files() {
 WGET_FILE=$LFS/sources/wget-list
 MIRROR=https://mirror.tochlab.net
 
-mkdir -pv "${LFS}"/sources
-
 echo "Downloading MD5SUMS..."
 
 cat > "${WGET_FILE}" <<EOF
@@ -31,7 +29,7 @@ EOF
 get_files_len
 download_files
 
-echo "Downloading lfs-packages, it takes a while..."
+echo "Downloading lfs-packages..."
 
 cat > "${WGET_FILE}" <<EOF
 ${MIRROR}/pub/lfs/lfs-packages/lfs-packages-${PACKAGES_VERSION}.tar

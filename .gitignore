@@ -1,3 +1,4 @@
 .vagrant/
+files/
 .DS_Store
 *.vdi

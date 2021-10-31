@@ -11,6 +11,3 @@ sudo mount -v -t ext4 /dev/sdb4 $LFS/home
 echo "Enabling swap..."
 sudo /sbin/swapon -v /dev/sdb1
 
-echo "Fixing permissions..."
-IAM=$(whoami)
-sudo chown -R $IAM $LFS
