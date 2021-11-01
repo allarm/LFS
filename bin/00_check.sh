@@ -54,6 +54,13 @@ else
   echo "awk not found"
 fi
 
+# Fixing awk -> gawk
+sudo rm $(which awk)
+sudo ln -s $(which gawk) /usr/bin/awk
+
+# Fixing yacc -> bison
+sudo rm $(which yacc)
+sudo ln -s $(which bison) /usr/bin/yacc
 gcc --version | head -n1
 g++ --version | head -n1
 ldd --version | head -n1 | cut -d" " -f2-  # glibc version
