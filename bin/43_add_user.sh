@@ -19,4 +19,6 @@ case $(uname -m) in
   x86_64) chown -v "${LFS_USER}" $LFS/lib64 ;;
 esac
 
-chown -v "${LFS_USER}" $LFS/sources
+chown -v "${LFS_USER}:${LFS_GROUP}" $LFS/sources
+chown -v "${LFS_USER}:${LFS_GROUP}" $LFS/sources/*
+chown -v "${LFS_USER}:${LFS_GROUP}" $LFS/sources/"${PACKAGES_VERSION}"/*
