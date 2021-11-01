@@ -227,3 +227,23 @@ popd
 dirs
 cd - # cd to the previous working directory
 cd ~2 # cd to the stack element
+
+* 4 Final Preparations
+
+** TIL
+
+su - # switches to a login shell
+
+* 5 Compiling a cross-toolchain
+
+** 5.0 Important Preliminary Material
+
+- C language is not just a compiler but *also defines the standard library*.
+  For this project the GNU C standard library is used - *glibc*.
+  This library should be compiled for the *lfs* machine using the cross compiler cc1.
+  The compiler itself uses another library *libgcc*. It must be linked to the *glibc* library.
+  The standard library for C++ *libstdc++* also needs being linked to *glibc*.
+
+Cross-compilation is normally used for building a compiler and its toolchain for a machine different from the one that is used for the build.
+In the example above, only cc1 and cc2 are cross-compilers, that is, they produce code for a machine different from the one they are run on.
+The other compilers ccA and ccC produce code for the machine they are run on. Such compilers are called native compilers
