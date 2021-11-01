@@ -13,3 +13,5 @@ done
 case $(uname -m) in
   x86_64) sudo mkdir -pv $LFS/lib64 ;;
 esac
+
+sudo mkdir -pv $LFS/tools
