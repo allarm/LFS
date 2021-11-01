@@ -14,7 +14,9 @@ fi
 echo "${LFS_USER}:${LFS_PASS}" | chpasswd
 
 # Fixing permissions
-chown -v lfs $LFS/{usr{,/*},lib,var,etc,bin,sbin,tools}
+chown -v "${LFS_USER}" $LFS/{usr{,/*},lib,var,etc,bin,sbin,tools}
 case $(uname -m) in
-  x86_64) chown -v lfs $LFS/lib64 ;;
+  x86_64) chown -v "${LFS_USER}" $LFS/lib64 ;;
 esac
+
+chown -v "${LFS_USER}" $LFS/sources
