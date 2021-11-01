@@ -76,4 +76,14 @@ Vagrant.configure("2") do |config|
     }
   end
 
+  config.vm.provision "Setting up environment...", type: "shell" do |s|
+    s.path = "bin/44_setup_environment.sh"
+    s.env = {
+      "LFS" => lfs,
+      "PACKAGES_VERSION" => packages_version,
+      "LFS_USER" => lfs_user,
+      "LFS_GROUP" => lfs_group,
+    }
+  end
+
 end
