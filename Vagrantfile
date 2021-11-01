@@ -52,12 +52,11 @@ Vagrant.configure("2") do |config|
   # If files were uploaded from local storage, it will be skipped
   config.vm.provision "Downloading sources...", type: "shell" do |s|
     s.path = "bin/31_sources.sh"
-    s.env = {"LFS" => lfs}
     s.env = {"LFS" => lfs, "PACKAGES_VERSION" => packages_version}
   end
 
   config.vm.provision "Unarchiving...", type: "shell" do |s|
     s.path = "bin/33_unarchive.sh"
-    s.env = {"LFS" => lfs}
+    s.env = {"LFS" => lfs, "PACKAGES_VERSION" => packages_version}
   end
 end
