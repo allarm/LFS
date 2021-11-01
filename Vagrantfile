@@ -56,4 +56,8 @@ Vagrant.configure("2") do |config|
     s.env = {"LFS" => lfs, "PACKAGES_VERSION" => packages_version}
   end
 
+  config.vm.provision "Unarchiving...", type: "shell" do |s|
+    s.path = "bin/33_unarchive.sh"
+    s.env = {"LFS" => lfs}
+  end
 end
