@@ -7,6 +7,7 @@ packages_version = '11.0'
 lfs_user = "lfs"
 lfs_pass = "lfs"
 lfs_group = "lfs"
+unpacked = "unpacked"
 
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/trusty64"
@@ -83,6 +84,17 @@ Vagrant.configure("2") do |config|
       "PACKAGES_VERSION" => packages_version,
       "LFS_USER" => lfs_user,
       "LFS_GROUP" => lfs_group,
+    }
+  end
+
+  config.vm.provision "Unpacking tarballs...", type: "shell" do |s|
+    s.path = "bin/50_unpack.sh"
+    s.env = {
+      "LFS" => lfs,
+      "PACKAGES_VERSION" => packages_version,
+      "LFS_USER" => lfs_user,
+      "LFS_GROUP" => lfs_group,
+      "UNPACKED" => unpacked,
     }
   end
 
