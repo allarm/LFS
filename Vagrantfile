@@ -47,6 +47,8 @@ Vagrant.configure("2") do |config|
     s.env = {"LFS" => lfs}
   end
 
+  # You can keep the copy of the sources tarball in local files,
+  # instead of downloading it
   config.vm.provision "Copying sources from local storage...", type: "file" do |s|
     s.source = "files/lfs/sources"
     s.destination = "/mnt/lfs/sources"
