@@ -4,6 +4,9 @@
 disk = './lfs.vdi'
 lfs = '/mnt/lfs'
 packages_version = '11.0'
+lfs_user = "lfs"
+lfs_pass = "lfs"
+lfs_group = "lfs"
 
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/trusty64"
@@ -59,4 +62,16 @@ Vagrant.configure("2") do |config|
     s.path = "bin/33_unarchive.sh"
     s.env = {"LFS" => lfs, "PACKAGES_VERSION" => packages_version}
   end
+
+  config.vm.provision "Configuring user...", type: "shell" do |s|
+    s.path = "bin/43_add_user.sh"
+    s.env = {
+      "LFS" => lfs,
+      "PACKAGES_VERSION" => packages_version,
+      "LFS_USER" => lfs_user,
+      "LFS_GROUP" => lfs_group,
+      "LFS_PASS" => lfs_pass
+    }
+  end
+
 end
